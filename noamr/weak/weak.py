@@ -118,14 +118,14 @@ if __name__ == '__main__':
                           data=df)
         p = p.map(plt.scatter, 'npts', 'ratio').add_legend()
         p = p.map(plt.plot, 'npts', 'ratio')
-        p.ax.set(xlabel=r'\# procs', ylabel=r'filter $t$ / total $t$')
+        p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$ / total $t$')
 
     plt.figure(1)
-    plt.savefig('runtimes.png', format='png')
+    plt.savefig('runtimes.png', format='png', dpi=300)
     plt.figure(2)
-    plt.savefig('filtertimes.png', format='png')
+    plt.savefig('filtertimes.png', format='png', dpi=300)
     plt.figure(3)
-    plt.savefig('ratios.png', format='png')
+    plt.savefig('ratios.png', format='png', dpi=300)
 
     if args.show:
         plt.show()

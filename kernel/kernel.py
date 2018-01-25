@@ -41,7 +41,7 @@ markertype = ['s', 'd', 'o', 'p', 'h']
 # ========================================================================
 def parse_profiler(fname):
 
-    npts, nprocs = list(map(int, re.findall(r'\d+', fname)))
+    npts, ltype = list(map(int, re.findall(r'\d+', fname)))
     runtime = 0
     filtertime = 0
     with open(fname, 'r') as f:
@@ -49,12 +49,9 @@ def parse_profiler(fname):
             if 'Run time w/o init =' in line:
                 runtime = float(line.split()[-1])
             elif 'Filter::apply_filter()' in line:
-                if nprocs == 1:
-                    filtertime = float(line.split()[2])
-                else:
-                    filtertime = float(line.split()[3])
+                filtertime = float(line.split()[2])
 
-    return npts, nprocs, runtime, filtertime
+    return npts, ltype, runtime, filtertime
 
 
 # ========================================================================
@@ -82,41 +79,21 @@ if __name__ == '__main__':
     lst = []
     for fname in fnames:
         lst.append(parse_profiler(fname))
-    df = pd.DataFrame(lst, columns=['npts', 'nprocs', 'runtime', 'filtertime'])
+    df = pd.DataFrame(lst, columns=['npts', 'ltype', 'runtime', 'filtertime'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
 
     # ========================================================================
     # Plot
     with sns.axes_style("white"):
 
-        p = sns.FacetGrid(hue='npts',
+        p = sns.FacetGrid(hue='ltype',
                           data=df)
-        p = p.map(plt.scatter, 'nprocs', 'runtime').add_legend()
-        p = p.map(plt.plot, 'nprocs', 'runtime')
-        p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
-        p.ax.set(xlabel=r'\# procs', ylabel=r'total $t$/dofs')
-
-        p = sns.FacetGrid(hue='npts',
-                          data=df)
-        p = p.map(plt.scatter, 'nprocs', 'filtertime').add_legend()
-        p = p.map(plt.plot, 'nprocs', 'filtertime')
-        p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
-        p.ax.set(xlabel=r'\# procs', ylabel=r'filter $t$/dofs')
-
-        p = sns.FacetGrid(hue='nprocs',
-                          data=df)
-        p = p.map(plt.scatter, 'npts', 'ratio').add_legend()
-        p = p.map(plt.plot, 'npts', 'ratio')
+        p = p.map(plt.scatter, 'npts', 'filtertime').add_legend()
+        p = p.map(plt.plot, 'npts', 'filtertime')
         p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$ / total $t$')
 
     plt.figure(1)
-    plt.savefig('runtimes.png', format='png', dpi=300)
-    plt.figure(2)
     plt.savefig('filtertimes.png', format='png', dpi=300)
-    plt.figure(3)
-    plt.savefig('ratios.png', format='png', dpi=300)
 
     if args.show:
         plt.show()
