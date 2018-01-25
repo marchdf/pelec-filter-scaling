@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#PBS -l walltime=48:00:00  # WALLTIME limit
+#PBS -q batch-h  # queue
+#PBS -l nodes=2:ppn=24  # Number of nodes, put x processes on each
+#PBS -N pc-filter-noamr-strong  # Name of job
+#PBS -A ExaCT  # Project handle
+#PBS -m ae  # Email at start/end of job
+#PBS -j oe  # Combine output and error file
+#PBS -M marc.henrydefrahan@nrel.gov
+echo $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+
+#  Put your job commands after this line
+{
+    module purge
+    module use /nopt/nrel/apps/modules/candidate/modulefiles
+    module load openmpi-gcc/1.10.0-5.2.0
+    module load gcc/5.2.0
+    module load python/2.7.8
+} &> /dev/null
+
+
+#================================================================================
+# Setup
+CWDIR=`pwd`
+NPROCS=(1 2 4 16 32)
+NCELLS=64
+INAME=inputs_3d
+
+#================================================================================
+# Pele binary
+PELECBIN=../../PeleC3d.gnu.PROF.MPI.ex
+
+#================================================================================
+# Run the scaling study
+WORKDIR=${CWDIR}
+rm -rf *.out chk* plt* datlog
+
+for NPROC in "${NPROCS[@]}"
+do
+    echo "Running with ${NPROC} procs"
+
+    NXCELLS=$((${NPROC} * ${NCELLS}))
+    XHI=$((2 * ${NPROC} - 1))
+
+    mpirun -n ${NPROC} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.use_explicit_filter=0 > `printf "0pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NPROC} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_type=0 > `printf "1pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NPROC} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=2 > `printf "3pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NPROC} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=4 > `printf "5pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NPROC} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=6 > `printf "7pt_%05dprocs.out" $NPROC` 2>&1 ;
+done

@@ -1,0 +1,15 @@
+*.out
+.DS_Store
+PeleC3d.gnu.PROF.MPI.ex
+pelec-filter.o*[0-9]
+plt*/
+chk*/
+datlog
+*.pdf
+__pycache__
+*.pyc
+ic.txt
+movie.visit
+visitlog.py
+*.curve
+bl_prof
