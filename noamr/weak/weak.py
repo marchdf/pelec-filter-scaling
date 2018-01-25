@@ -53,8 +53,10 @@ def parse_profiler(fname):
                     filtertime = float(line.split()[2])
                 else:
                     filtertime = float(line.split()[3])
+            elif '[Level 0 step 1] Advanced' in line:
+                ndofs = float(line.split()[5])
 
-    return npts, nprocs, runtime, filtertime
+    return npts, nprocs, runtime, filtertime, ndofs
 
 
 # ========================================================================
@@ -82,8 +84,15 @@ if __name__ == '__main__':
     lst = []
     for fname in fnames:
         lst.append(parse_profiler(fname))
-    df = pd.DataFrame(lst, columns=['npts', 'nprocs', 'runtime', 'filtertime'])
+    df = pd.DataFrame(lst, columns=['npts',
+                                    'nprocs',
+                                    'runtime',
+                                    'filtertime',
+                                    'ndofs'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
+    df['runtime'] /= df['ndofs']
+    df['filtertime'] /= df['ndofs']
+    print(df)
 
     # ========================================================================
     # Plot
@@ -94,7 +103,7 @@ if __name__ == '__main__':
         p = p.map(plt.scatter, 'nprocs', 'runtime').add_legend()
         p = p.map(plt.plot, 'nprocs', 'runtime')
         p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
+        p.ax.set_ylim([0, 1e-3])
         p.ax.set(xlabel=r'\# procs', ylabel=r'total $t$/dofs')
 
         p = sns.FacetGrid(hue='npts',
@@ -102,7 +111,7 @@ if __name__ == '__main__':
         p = p.map(plt.scatter, 'nprocs', 'filtertime').add_legend()
         p = p.map(plt.plot, 'nprocs', 'filtertime')
         p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
+        p.ax.set_ylim([0, 1e-4])
         p.ax.set(xlabel=r'\# procs', ylabel=r'filter $t$/dofs')
 
         p = sns.FacetGrid(hue='nprocs',
