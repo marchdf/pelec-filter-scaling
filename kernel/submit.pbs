@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#PBS -l walltime=04:00:00  # WALLTIME limit
+#PBS -q short  # queue
+#PBS -l nodes=1:ppn=24  # Number of nodes, put x processes on each
+#PBS -N pc-filter-kernel  # Name of job
+#PBS -A ExaCT  # Project handle
+#PBS -m ae  # Email at start/end of job
+#PBS -j oe  # Combine output and error file
+#PBS -M marc.henrydefrahan@nrel.gov
+echo $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+
+#  Put your job commands after this line
+{
+    module purge
+    module use /nopt/nrel/apps/modules/candidate/modulefiles
+    module load openmpi-gcc/1.10.0-5.2.0
+    module load gcc/5.2.0
+    module load python/2.7.8
+} &> /dev/null
+
+
+#================================================================================
+# Setup
+CWDIR=`pwd`
+TYPES=('loop1' 'loop2')
+INAME=inputs_3d
+
+#================================================================================
+# Pele binary
+PELECPFX=./PeleC3d.gnu.PROF.MPI.ex
+
+#================================================================================
+# Run the scaling study
+WORKDIR=${CWDIR}
+rm -rf *.out chk* plt* datlog
+
+for TYPE in "${TYPES[@]}"
+do
+    PELECBIN=${PELECPFX}.${TYPE}
+    echo "Running ${PELECBIN}"
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > "0pt_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_type=0 > "1pt_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > "3pt_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > "5pt_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > "7pt_${TYPE}.out" 2>&1 ;
+done
