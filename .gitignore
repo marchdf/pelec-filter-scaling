@@ -1,7 +1,7 @@
 *.out
 .DS_Store
 PeleC3d.gnu.PROF.MPI.ex
-pelec-filter.o*[0-9]
+*.o*[0-9]
 plt*/
 chk*/
 datlog
@@ -12,4 +12,4 @@ ic.txt
 movie.visit
 visitlog.py
 *.curve
-bl_prof
+bl_prof*
