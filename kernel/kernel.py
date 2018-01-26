@@ -90,7 +90,7 @@ if __name__ == '__main__':
                           data=df)
         p = p.map(plt.scatter, 'npts', 'filtertime').add_legend()
         p = p.map(plt.plot, 'npts', 'filtertime')
-        p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$ / total $t$')
+        p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$')
 
     plt.figure(1)
     plt.savefig('filtertimes.png', format='png', dpi=300)
