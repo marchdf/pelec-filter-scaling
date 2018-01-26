@@ -24,24 +24,28 @@ cd $PBS_O_WORKDIR
 #================================================================================
 # Setup
 CWDIR=`pwd`
-NPROCS=(1 2 4 16 32)
 INAME=inputs_3d
+THREADS=12
+NRANKS=(2 4)
 
 #================================================================================
 # Pele binary
-PELECBIN=../../PeleC3d.gnu.PROF.MPI.ex
+PELECBIN=../../PeleC3d.gnu.PROF.MPI.OMP.ex
 
 #================================================================================
 # Run the scaling study
 WORKDIR=${CWDIR}
-rm -rf *.out chk* plt* bl_prof* datlog
 
-for NPROC in "${NPROCS[@]}"
+export OMP_NUM_THREADS=${THREADS}
+for NRANK in "${NRANKS[@]}"
 do
-    echo "Running with ${NPROC} procs"
-    mpirun -n ${NPROC} ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > `printf "0pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NPROC} ${PELECBIN} ${INAME} pelec.les_filter_type=0 > `printf "1pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NPROC} ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > `printf "3pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NPROC} ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > `printf "5pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NPROC} ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > `printf "7pt_%05dprocs.out" $NPROC` 2>&1 ;
+    NPROC=$((${NRANK} * ${THREADS}))
+    echo "Running with ${NRANK} ranks and ${THREADS} threads (${NPROC} procs)"
+
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > `printf "0pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_type=0 > `printf "1pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > `printf "3pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > `printf "5pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > `printf "7pt_%05dprocs.out" $NPROC` 2>&1 ;
 done
+rm -rf chk* plt* bl_prof* datlog
