@@ -45,10 +45,10 @@ do
     XHI=$((2 * ${NRANK} - 1))
     echo "Running with ${NRANK} ranks and ${THREADS} threads (${NPROC} procs)"
 
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.use_explicit_filter=0 > `printf "0pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_type=0 > `printf "1pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=2 > `printf "3pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=4 > `printf "5pt_%05dprocs.out" $NPROC` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=6 > `printf "7pt_%05dprocs.out" $NPROC` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.use_explicit_filter=0 > `printf "0pts_%05dprocs.out" ${NPROC}` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_type=0 > `printf "1pts_%05dprocs.out" ${NPROC}` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=2 > `printf "3pts_%05dprocs.out" ${NPROC}` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=4 > `printf "5pts_%05dprocs.out" ${NPROC}` 2>&1 ;
+    mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.n_cell=${NXCELLS} ${NCELLS} ${NCELLS} geometry.prob_hi=${XHI} 1.0 1.0 pelec.les_filter_fgr=6 > `printf "7pts_%05dprocs.out" ${NPROC}` 2>&1 ;
 done
 rm -rf chk* plt* bl_prof* datlog

@@ -39,10 +39,10 @@ for TYPE in "${TYPES[@]}"
 do
     PELECBIN=${PELECPFX}.${TYPE}
     echo "Running ${PELECBIN}"
-    mpirun -n 1 ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > "0pt_${TYPE}.out" 2>&1 ;
-    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_type=0 > "1pt_${TYPE}.out" 2>&1 ;
-    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > "3pt_${TYPE}.out" 2>&1 ;
-    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > "5pt_${TYPE}.out" 2>&1 ;
-    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > "7pt_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > "0pts_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_type=0 > "1pts_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > "3pts_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > "5pts_${TYPE}.out" 2>&1 ;
+    mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > "7pts_${TYPE}.out" 2>&1 ;
 done
 rm -rf chk* plt* bl_prof*

@@ -25,8 +25,11 @@ cd $PBS_O_WORKDIR
 # Setup
 CWDIR=`pwd`
 INAME=inputs_3d
+GPFX=grids_file_
 THREADS=12
 NRANKS=(2 4)
+NLVLS=(1 2 3)
+
 
 #================================================================================
 # Pele binary
@@ -40,12 +43,16 @@ export OMP_NUM_THREADS=${THREADS}
 for NRANK in "${NRANKS[@]}"
 do
     NPROC=$((${NRANK} * ${THREADS}))
-    echo "Running with ${NRANK} ranks and ${THREADS} threads (${NPROC} procs)"
 
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.use_explicit_filter=0 > `printf "0pts_%05dprocs.out" {$NPROC}` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_type=0 > `printf "1pts_%05dprocs.out" {$NPROC}` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=2 > `printf "3pts_%05dprocs.out" {$NPROC}` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > `printf "5pts_%05dprocs.out" {$NPROC}` 2>&1 ;
-    mpirun -n ${NRANK} ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > `printf "7pts_%05dprocs.out" {$NPROC}` 2>&1 ;
+    for NLVL in "${NLVLS[@]}"
+    do
+        echo "Running with ${NRANK} ranks and ${THREADS} threads (${NPROC} procs) and ${NLVL} levels"
+        
+        mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} pelec.use_explicit_filter=0 > `printf "0pts_%01lvls_%05dprocs.out" ${NLVL} ${NPROC}` 2>&1 ;
+        mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} pelec.les_filter_type=0 > `printf "1pts_%01lvls_%05dprocs.out" ${NLVL} ${NPROC}` 2>&1 ;
+        mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} pelec.les_filter_fgr=2 > `printf "3pts_%01lvls_%05dprocs.out" ${NLVL} ${NPROC}` 2>&1 ;
+        mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} pelec.les_filter_fgr=4 > `printf "5pts_%01lvls_%05dprocs.out" ${NLVL} ${NPROC}` 2>&1 ;
+        mpirun -n ${NRANK} ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} pelec.les_filter_fgr=6 > `printf "7pts_%01lvls_%05dprocs.out" ${NLVL} ${NPROC}` 2>&1 ;
+    done
 done
 rm -rf chk* plt* bl_prof* datlog
