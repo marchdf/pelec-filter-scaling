@@ -35,7 +35,7 @@ PELECBIN=../../PeleC3d.gnu.PROF.MPI.ex
 #================================================================================
 # Run the scaling study
 WORKDIR=${CWDIR}
-rm -rf *.out chk* plt* datlog
+rm -rf *.out chk* plt* bl_prof* datlog
 
 for NPROC in "${NPROCS[@]}"
 do

@@ -24,7 +24,7 @@ cd $PBS_O_WORKDIR
 #================================================================================
 # Setup
 CWDIR=`pwd`
-TYPES=('loop1' 'loop2')
+TYPES=('loop1' 'loop2' 'loop3' 'loop4' 'loop5')
 INAME=inputs_3d
 
 #================================================================================
@@ -34,7 +34,6 @@ PELECPFX=./PeleC3d.gnu.PROF.MPI.ex
 #================================================================================
 # Run the scaling study
 WORKDIR=${CWDIR}
-rm -rf *.out chk* plt* datlog
 
 for TYPE in "${TYPES[@]}"
 do
@@ -46,3 +45,4 @@ do
     mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > "5pt_${TYPE}.out" 2>&1 ;
     mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > "7pt_${TYPE}.out" 2>&1 ;
 done
+rm -rf chk* plt* bl_prof*
