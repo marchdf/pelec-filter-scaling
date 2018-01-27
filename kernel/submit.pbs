@@ -45,4 +45,4 @@ do
     mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=4 > "5pts_${TYPE}.out" 2>&1 ;
     mpirun -n 1 ${PELECBIN} ${INAME} pelec.les_filter_fgr=6 > "7pts_${TYPE}.out" 2>&1 ;
 done
-rm -rf chk* plt* bl_prof*
+rm -rf chk* plt* bl_prof* datlog
