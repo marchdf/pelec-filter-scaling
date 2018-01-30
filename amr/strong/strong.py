@@ -41,7 +41,7 @@ markertype = ['s', 'd', 'o', 'p', 'h']
 # ========================================================================
 def parse_profiler(fname):
 
-    npts, nprocs = list(map(int, re.findall(r'\d+', fname)))
+    npts, nlvls, nprocs = list(map(int, re.findall(r'\d+', fname)))
     runtime = 0
     filtertime = 0
     with open(fname, 'r') as f:
@@ -53,10 +53,8 @@ def parse_profiler(fname):
                     filtertime = float(line.split()[2])
                 else:
                     filtertime = float(line.split()[3])
-            elif '[Level 0 step 1] Advanced' in line:
-                ndofs = float(line.split()[5])
 
-    return npts, nprocs, runtime, filtertime, ndofs
+    return npts, nlvls, nprocs, runtime, filtertime
 
 
 # ========================================================================
@@ -66,8 +64,8 @@ def parse_profiler(fname):
 # ========================================================================
 if __name__ == '__main__':
 
-        # ========================================================================
-        # Parse arguments
+    # ========================================================================
+    # Parse arguments
     parser = argparse.ArgumentParser(
         description='A simple plot tool')
     parser.add_argument(
@@ -85,20 +83,18 @@ if __name__ == '__main__':
     for fname in fnames:
         lst.append(parse_profiler(fname))
     df = pd.DataFrame(lst, columns=['npts',
+                                    'nlvls',
                                     'nprocs',
                                     'runtime',
-                                    'filtertime',
-                                    'ndofs'])
+                                    'filtertime'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
-    df['runtime'] /= df['ndofs']
-    df['filtertime'] /= df['ndofs']
-    print(df)
 
     # ========================================================================
     # Plot
     with sns.axes_style("white"):
 
         p = sns.FacetGrid(hue='npts',
+                          col='nlvls',
                           data=df)
         p.map(plt.plot,
               'nprocs',
@@ -108,9 +104,10 @@ if __name__ == '__main__':
         p.set(xscale='log',
               yscale='log',
               xlabel=r'\# procs',
-              ylabel=r'total $t$/dofs')
+              ylabel=r'total $t$')
 
         p = sns.FacetGrid(hue='npts',
+                          col='nlvls',
                           data=df)
         p.map(plt.plot,
               'nprocs',
@@ -120,9 +117,10 @@ if __name__ == '__main__':
         p.set(xscale='log',
               yscale='log',
               xlabel=r'\# procs',
-              ylabel=r'filter $t$/dofs')
+              ylabel=r'filter $t$')
 
         p = sns.FacetGrid(hue='nprocs',
+                          col='nlvls',
                           data=df)
         p.map(plt.plot,
               'npts',

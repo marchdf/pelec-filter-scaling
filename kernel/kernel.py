@@ -88,10 +88,14 @@ if __name__ == '__main__':
 
         p = sns.FacetGrid(hue='ltype',
                           data=df)
-        p = p.map(plt.scatter, 'npts', 'filtertime')
-        p = p.map(plt.plot, 'npts', 'filtertime').add_legend()
+        p.map(plt.plot,
+              'npts',
+              'filtertime',
+              marker="o",
+              ms=4).add_legend()
         p._legend.set_title("loop type")
-        p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$')
+        p.set(xlabel=r'\# pts',
+              ylabel=r'filter $t$')
 
     plt.figure(1)
     plt.savefig('filtertimes.png', format='png', dpi=300)

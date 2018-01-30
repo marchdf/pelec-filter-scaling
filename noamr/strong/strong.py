@@ -91,25 +91,37 @@ if __name__ == '__main__':
 
         p = sns.FacetGrid(hue='npts',
                           data=df)
-        p = p.map(plt.scatter, 'nprocs', 'runtime')
-        p = p.map(plt.plot, 'nprocs', 'runtime').add_legend()
-        p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
-        p.ax.set(xlabel=r'\# procs', ylabel=r'total $t$/dofs')
+        p.map(plt.plot,
+              'nprocs',
+              'runtime',
+              marker="o",
+              ms=4).add_legend()
+        p.set(xscale='log',
+              yscale='log',
+              xlabel=r'\# procs',
+              ylabel=r'total $t$')
 
         p = sns.FacetGrid(hue='npts',
                           data=df)
-        p = p.map(plt.scatter, 'nprocs', 'filtertime')
-        p = p.map(plt.plot, 'nprocs', 'filtertime').add_legend()
-        p.ax.set_xscale('log')
-        p.ax.set_yscale('log')
-        p.ax.set(xlabel=r'\# procs', ylabel=r'filter $t$/dofs')
+        p.map(plt.plot,
+              'nprocs',
+              'filtertime',
+              marker="o",
+              ms=4).add_legend()
+        p.set(xscale='log',
+              yscale='log',
+              xlabel=r'\# procs',
+              ylabel=r'filter $t$')
 
         p = sns.FacetGrid(hue='nprocs',
                           data=df)
-        p = p.map(plt.scatter, 'npts', 'ratio')
-        p = p.map(plt.plot, 'npts', 'ratio').add_legend()
-        p.ax.set(xlabel=r'\# pts', ylabel=r'filter $t$ / total $t$')
+        p.map(plt.plot,
+              'npts',
+              'ratio',
+              marker="o",
+              ms=4).add_legend()
+        p.set(xlabel=r'\# pts',
+              ylabel=r'filter $t$ / total $t$')
 
     plt.figure(1)
     plt.savefig('runtimes.png', format='png', dpi=300)
