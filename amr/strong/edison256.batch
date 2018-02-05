@@ -1,0 +1,17 @@
+#!/bin/bash -l
+
+#SBATCH -q debug
+#SBATCH -N 256
+#SBATCH -t 00:30:00
+#SBATCH -J pc-filter-amr-strong
+#SBATCH -o pc-filter-amr-strong.o%j
+#SBATCH -L SCRATCH
+#SBATCH -A m2860
+
+CWDIR=`pwd`
+source ${CWDIR}/run_cases.sh
+run_cases
+
+
+
+

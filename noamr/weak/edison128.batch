@@ -1,0 +1,13 @@
+#!/bin/bash -l
+
+#SBATCH -q debug
+#SBATCH -N 128
+#SBATCH -t 00:30:00
+#SBATCH -J pc-filter-noamr-weak
+#SBATCH -o pc-filter-noamr-weak.o%j
+#SBATCH -L SCRATCH
+#SBATCH -A m2860
+
+CWDIR=`pwd`
+source ${CWDIR}/run_cases.sh
+run_cases
