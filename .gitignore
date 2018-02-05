@@ -1,7 +1,6 @@
 *.out
 .DS_Store
-PeleC3d.gnu.PROF.MPI.ex*
-PeleC3d.gnu.PROF.MPI.OMP.ex*
+PeleC3d.gnu.*.ex*
 *.o*[0-9]
 plt*/
 chk*/
