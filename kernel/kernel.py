@@ -81,24 +81,40 @@ if __name__ == '__main__':
         lst.append(parse_profiler(fname))
     df = pd.DataFrame(lst, columns=['npts', 'ltype', 'runtime', 'filtertime'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
+    df['delta'] = df['npts']-1
 
     # ========================================================================
     # Plot
-    with sns.axes_style("white"):
+    names = [r'1: $n_c,k,j,i,n,m,l$',
+             r'2: $n_c,n,k,m,j,l,i$',
+             r'3: $n_c,k,n,j,m,i,l$',
+             r'4: $n,m,l,n_c,k,j,i$',
+             r'5: $n_c,n,m,l,k,j,i$']
+    plt.figure(0)
+    for k, ltype in enumerate(np.unique(df.ltype)):
 
-        p = sns.FacetGrid(hue='ltype',
-                          data=df)
-        p.map(plt.plot,
-              'npts',
-              'filtertime',
-              marker="o",
-              ms=4).add_legend()
-        p._legend.set_title("loop type")
-        p.set(xlabel=r'\# pts',
-              ylabel=r'filter $t$')
+        subdf = df[df.ltype == ltype]
 
-    plt.figure(1)
-    plt.savefig('filtertimes.png', format='png', dpi=300)
+        p = plt.plot(subdf.npts,
+                     subdf.ratio,
+                     lw=2,
+                     color=cmap[k],
+                     marker=markertype[k],
+                     mec=cmap[k],
+                     mfc=cmap[k],
+                     ms=10,
+                     label=names[k])
+
+    plt.figure(0)
+    ax = plt.gca()
+    plt.xlabel(r"$n$", fontsize=22, fontweight='bold')
+    plt.ylabel(r"time $~[\%]$", fontsize=22, fontweight='bold')
+    plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
+    plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
+    legend = ax.legend(loc='best')
+    ax.set_ylim([0, 60])
+    plt.tight_layout()
+    plt.savefig('filtertimes.png', format='png')
 
     if args.show:
         plt.show()
