@@ -1,17 +1,15 @@
 #!/bin/bash
 
 run_cases () {
-    (set -x; ls -alh ${SLURM_CPUS_ON_NODE})
-    (set -x; ls -alh ${SLURM_JOB_NUM_NODES})
 
     # Setup
     PELECBIN=../../PeleC3d.gnu.ivybridge.PROF.MPI.OMP.ex
     INAME=inputs_3d
     NLVLS=(1 2 3)
 
-    HYPERTHREADS=2
+    HYPERTHREADS=1
     TASKS_PER_NODE=2
-    THREADS=${SLURM_CPUS_ON_NODE} / ${TASKS_PER_NODE}
+    THREADS=$((${SLURM_CPUS_ON_NODE} / ${TASKS_PER_NODE}))
     TASKS=$((${SLURM_JOB_NUM_NODES} * ${TASKS_PER_NODE}))
     CPUS_PER_TASKS=$((${HYPERTHREADS} * ${THREADS}))
     NPROCS=$((${TASKS} * ${THREADS}))
