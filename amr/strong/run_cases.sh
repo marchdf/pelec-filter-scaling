@@ -35,7 +35,4 @@ run_cases () {
         (set -x; srun -n ${TASKS} -c ${CPUS_PER_TASKS} --cpu_bind=sockets ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} amr.n_cell=${NCELLS} ${NCELLS} ${NCELLS} pelec.les_filter_fgr=4 > `printf "5pts_%01dlvls_%08dcores.out" ${NLVL} ${CORES}` 2>&1 ;)
         (set -x; srun -n ${TASKS} -c ${CPUS_PER_TASKS} --cpu_bind=sockets ${PELECBIN} ${INAME} amr.initial_grid_file=${GPFX}${NLVL} amr.n_cell=${NCELLS} ${NCELLS} ${NCELLS} pelec.les_filter_fgr=6 > `printf "7pts_%01dlvls_%08dcores.out" ${NLVL} ${CORES}` 2>&1 ;)
     done
-
-
-
 }
