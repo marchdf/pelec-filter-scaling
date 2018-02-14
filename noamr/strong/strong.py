@@ -85,7 +85,7 @@ if __name__ == '__main__':
     df = pd.DataFrame(lst, columns=['npts', 'nprocs', 'runtime', 'filtertime'])
     df.sort_values(by=['npts', 'nprocs'], inplace=True)
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
-    df['delta'] = df['npts']-1
+    df['delta'] = df['npts'] - 1
     df['theory'] = df['nprocs']**(-1.0)
 
     min_procs = df.nprocs.min()
@@ -135,14 +135,14 @@ if __name__ == '__main__':
 
     plt.figure(1)
     p = plt.plot(subdf.nprocs,
-                 subdf.nprocs/min_procs,
+                 subdf.nprocs / min_procs,
                  lw=2,
                  color=cmap[-1],
                  label="perfect scaling")
 
     plt.figure(2)
     p = plt.plot(subdf.nprocs,
-                 subdf.nprocs/min_procs,
+                 subdf.nprocs / min_procs,
                  lw=2,
                  color=cmap[-1],
                  label="perfect scaling")
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
     plt.figure(1)
     ax = plt.gca()
-    plt.xlabel(r"\# procs", fontsize=22, fontweight='bold')
+    plt.xlabel(r"cores", fontsize=22, fontweight='bold')
     plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
     plt.figure(2)
     ax = plt.gca()
-    plt.xlabel(r"\# procs", fontsize=22, fontweight='bold')
+    plt.xlabel(r"cores", fontsize=22, fontweight='bold')
     plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')

@@ -53,8 +53,8 @@ def parse_profiler(fname):
                     filtertime = float(line.split()[2])
                 else:
                     filtertime = float(line.split()[3])
-            elif '[Level 0 step 1] Advanced' in line:
-                ndofs = float(line.split()[5])
+            elif ('Level 0' in line) and ('grids' in line):
+                ndofs = float(line.split()[4])
 
     return npts, nprocs, runtime, filtertime, ndofs
 
@@ -90,54 +90,76 @@ if __name__ == '__main__':
                                     'filtertime',
                                     'ndofs'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
-    df['runtime'] /= df['ndofs']
-    df['filtertime'] /= df['ndofs']
-    print(df)
 
     # ========================================================================
     # Plot
-    with sns.axes_style("white"):
+    for k, npts in enumerate(np.unique(df.npts)):
+        subdf = df[df.npts == npts].copy()
 
-        p = sns.FacetGrid(hue='npts',
-                          data=df)
-        p.map(plt.plot,
-              'nprocs',
-              'runtime',
-              marker="o",
-              ms=4).add_legend()
-        p.set(xscale='log',
-              yscale='log',
-              xlabel=r'\# procs',
-              ylabel=r'total $t$/dofs')
+        plt.figure(0)
+        p = plt.semilogx(subdf.nprocs,
+                         subdf.ratio,
+                         lw=2,
+                         color=cmap[k],
+                         marker=markertype[k],
+                         mec=cmap[k],
+                         mfc=cmap[k],
+                         ms=10,
+                         label=r'$n={0:d}$'.format(npts))
 
-        p = sns.FacetGrid(hue='npts',
-                          data=df)
-        p.map(plt.plot,
-              'nprocs',
-              'filtertime',
-              marker="o",
-              ms=4).add_legend()
-        p.set(xscale='log',
-              yscale='log',
-              xlabel=r'\# procs',
-              ylabel=r'filter $t$/dofs')
+        plt.figure(1)
+        p = plt.plot(subdf.nprocs,
+                     subdf.runtime,
+                     lw=2,
+                     color=cmap[k],
+                     marker=markertype[k],
+                     mec=cmap[k],
+                     mfc=cmap[k],
+                     ms=10,
+                     label=r'$n={0:d}$'.format(npts))
 
-        p = sns.FacetGrid(hue='nprocs',
-                          data=df)
-        p.map(plt.plot,
-              'npts',
-              'ratio',
-              marker="o",
-              ms=4).add_legend()
-        p.set(xlabel=r'\# pts',
-              ylabel=r'filter $t$ / total $t$')
+        plt.figure(2)
+        p = plt.plot(subdf.nprocs,
+                     subdf.filtertime,
+                     lw=2,
+                     color=cmap[k],
+                     marker=markertype[k],
+                     mec=cmap[k],
+                     mfc=cmap[k],
+                     ms=10,
+                     label=r'$n={0:d}$'.format(npts))
+    plt.figure(0)
+    ax = plt.gca()
+    plt.xlabel(r"\# procs", fontsize=22, fontweight='bold')
+    plt.ylabel(r"time $~[\%]$", fontsize=22, fontweight='bold')
+    plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
+    plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
+    legend = ax.legend(loc='best')
+    # ax.set_ylim([0, 20])
+    plt.tight_layout()
+    plt.savefig('ratios.png', format='png')
 
     plt.figure(1)
-    plt.savefig('runtimes.png', format='png', dpi=300)
+    ax = plt.gca()
+    plt.xlabel(r"cores", fontsize=22, fontweight='bold')
+    plt.ylabel(r"total $t$", fontsize=22, fontweight='bold')
+    plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
+    plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
+    legend = ax.legend(loc='best')
+    # ax.set_ylim([0, 20])
+    plt.tight_layout()
+    plt.savefig('runtimes.png', format='png')
+
     plt.figure(2)
-    plt.savefig('filtertimes.png', format='png', dpi=300)
-    plt.figure(3)
-    plt.savefig('ratios.png', format='png', dpi=300)
+    ax = plt.gca()
+    plt.xlabel(r"cores", fontsize=22, fontweight='bold')
+    plt.ylabel(r"filter $t$", fontsize=22, fontweight='bold')
+    plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
+    plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
+    legend = ax.legend(loc='best')
+    # ax.set_ylim([0, 20])
+    plt.tight_layout()
+    plt.savefig('filtertimes.png', format='png')
 
     if args.show:
         plt.show()
