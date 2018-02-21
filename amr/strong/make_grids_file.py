@@ -24,7 +24,9 @@ if __name__ == '__main__':
     # Setup
 
     # n^3 = number of cells on each level
-    n = 512
+    n = 512  # 1 level
+    # n = 448  # 2 level
+    # n = 416  # 3 level and max_grid_size = 32
 
     # number of levels beyond the base level
     nlvls = 1
@@ -49,8 +51,8 @@ if __name__ == '__main__':
             extent = int(resolution / (ratio**(k + 2)))
             xs = np.arange(center - extent,
                            center + extent,
-                           max_grid_size)
-            xe = xs + max_grid_size - 1
+                           int(max_grid_size / ratio))
+            xe = xs + int(max_grid_size / 2) - 1
 
             XS = np.meshgrid(xs, xs, xs)
             XE = np.meshgrid(xe, xe, xe)
