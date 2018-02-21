@@ -3,7 +3,7 @@
 run_cases () {
 
     # Setup
-    PELECBIN=../../PeleC3d.gnu.ivybridge.PROF.MPI.OMP.ex
+    PELECBIN=../PeleC3d.gnu.ivybridge.PROF.MPI.OMP.ex
     INAME=inputs_3d
     GPFX=grids_file_
     MGSS=(8 16 32 64)
