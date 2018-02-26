@@ -41,7 +41,7 @@ markertype = ['s', 'd', 'o', 'p', 'h']
 # ========================================================================
 def parse_profiler(fname):
 
-    npts, nlvls, nprocs = list(map(int, re.findall(r'\d+', fname)))
+    npts, mgs, nlvls, nprocs = list(map(int, re.findall(r'\d+', fname)))
     runtime = 0
     filtertime = 0
     with open(fname, 'r') as f:
@@ -54,7 +54,7 @@ def parse_profiler(fname):
                 else:
                     filtertime = float(line.split()[3])
 
-    return npts, nlvls, nprocs, runtime, filtertime
+    return npts, mgs, nlvls, nprocs, runtime, filtertime
 
 
 # ========================================================================
@@ -83,109 +83,60 @@ if __name__ == '__main__':
     for fname in fnames:
         lst.append(parse_profiler(fname))
     df = pd.DataFrame(lst, columns=['npts',
+                                    'mgs',
                                     'nlvls',
                                     'nprocs',
                                     'runtime',
                                     'filtertime'])
-    df['ratio'] = df['filtertime'] / df['runtime'] * 100
-    df['delta'] = df['npts'] - 1
-    df['theory'] = df['nprocs']**(-1.0)
 
-    min_procs = df.nprocs.min()
-
-    # ========================================================================
+    # ======================================================================
     # Plot
-    for nlvls in np.unique(df.nlvls):
-        plt.close('all')
+    for k, nlvls in enumerate(np.unique(df.nlvls)):
         ndf = df[(df.nlvls == nlvls)].copy()
-        total_basetimes = ndf.groupby('npts')['runtime'].first()
-        filter_basetimes = ndf.groupby('npts')['filtertime'].first()
-        for k, npts in enumerate(np.unique(ndf.npts)):
-            subdf = ndf[(ndf.npts == npts)].copy()
-            subdf['total_speedup'] = total_basetimes.iloc[k] / subdf['runtime']
-            subdf['filter_speedup'] = filter_basetimes.iloc[k] / \
-                subdf['filtertime']
 
-            plt.figure(0)
-            p = plt.semilogx(subdf.nprocs,
-                             subdf.ratio,
-                             lw=2,
-                             color=cmap[k],
-                             marker=markertype[k],
-                             mec=cmap[k],
-                             mfc=cmap[k],
-                             ms=10,
-                             label=r'$n={0:d}$'.format(npts))
-
-            plt.figure(1)
-            p = plt.plot(subdf.nprocs,
-                         subdf.total_speedup,
-                         lw=2,
-                         color=cmap[k],
-                         marker=markertype[k],
-                         mec=cmap[k],
-                         mfc=cmap[k],
-                         ms=10,
-                         label=r'$n={0:d}$'.format(npts))
-
-            if npts != 0:
-                plt.figure(2)
-                p = plt.plot(subdf.nprocs,
-                             subdf.filter_speedup,
-                             lw=2,
-                             color=cmap[k],
-                             marker=markertype[k],
-                             mec=cmap[k],
-                             mfc=cmap[k],
-                             ms=10,
-                             label=r'$n={0:d}$'.format(npts))
+        plt.figure(0)
+        p = plt.plot(ndf.mgs,
+                     ndf.runtime,
+                     lw=2,
+                     color=cmap[k],
+                     marker=markertype[k],
+                     mec=cmap[k],
+                     mfc=cmap[k],
+                     ms=10,
+                     label=r'$levels={0:d}$'.format(nlvls))
 
         plt.figure(1)
-        p = plt.plot(subdf.nprocs,
-                     subdf.nprocs / min_procs,
+        p = plt.plot(ndf.mgs,
+                     ndf.filtertime,
                      lw=2,
-                     color=cmap[-1],
-                     label="perfect scaling")
-
-        plt.figure(2)
-        p = plt.plot(subdf.nprocs,
-                     subdf.nprocs / min_procs,
-                     lw=2,
-                     color=cmap[-1],
-                     label="perfect scaling")
+                     color=cmap[k],
+                     marker=markertype[k],
+                     mec=cmap[k],
+                     mfc=cmap[k],
+                     ms=10,
+                     label=r'$levels={0:d}$'.format(nlvls))
 
         plt.figure(0)
         ax = plt.gca()
-        plt.xlabel(r"\# procs", fontsize=22, fontweight='bold')
-        plt.ylabel(r"time $~[\%]$", fontsize=22, fontweight='bold')
+        plt.xlabel(r"grid size", fontsize=22, fontweight='bold')
+        plt.ylabel(r"total $t$", fontsize=22, fontweight='bold')
         plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
         plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
         legend = ax.legend(loc='best')
         # ax.set_ylim([0, 20])
         plt.tight_layout()
-        plt.savefig('ratios_{0:d}.png'.format(nlvls), format='png')
+        plt.savefig('total_time.png', format='png')
 
         plt.figure(1)
         ax = plt.gca()
-        plt.xlabel(r"cores", fontsize=22, fontweight='bold')
-        plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
+        plt.xlabel(r"grid size", fontsize=22, fontweight='bold')
+        plt.ylabel(r"filter $t$", fontsize=22, fontweight='bold')
         plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
         plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
         legend = ax.legend(loc='best')
         # ax.set_ylim([0, 20])
         plt.tight_layout()
-        plt.savefig('total_speedup_{0:d}.png'.format(nlvls), format='png')
-
-        plt.figure(2)
-        ax = plt.gca()
-        plt.xlabel(r"cores", fontsize=22, fontweight='bold')
-        plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
-        plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
-        plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-        legend = ax.legend(loc='best')
-        # ax.set_ylim([0, 20])
-        plt.tight_layout()
-        plt.savefig('filter_speedup_{0:d}.png'.format(nlvls), format='png')
+        plt.savefig('filter_time.png', format='png')
 
     if args.show:
         plt.show()

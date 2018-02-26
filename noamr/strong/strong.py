@@ -122,16 +122,17 @@ if __name__ == '__main__':
                      ms=10,
                      label=r'$n={0:d}$'.format(npts))
 
-        plt.figure(2)
-        p = plt.plot(subdf.nprocs,
-                     subdf.filter_speedup,
-                     lw=2,
-                     color=cmap[k],
-                     marker=markertype[k],
-                     mec=cmap[k],
-                     mfc=cmap[k],
-                     ms=10,
-                     label=r'$n={0:d}$'.format(npts))
+        if npts != 0:
+            plt.figure(2)
+            p = plt.plot(subdf.nprocs,
+                         subdf.filter_speedup,
+                         lw=2,
+                         color=cmap[k],
+                         marker=markertype[k],
+                         mec=cmap[k],
+                         mfc=cmap[k],
+                         ms=10,
+                         label=r'$n={0:d}$'.format(npts))
 
     plt.figure(1)
     p = plt.plot(subdf.nprocs,

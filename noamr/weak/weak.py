@@ -118,16 +118,17 @@ if __name__ == '__main__':
                      ms=10,
                      label=r'$n={0:d}$'.format(npts))
 
-        plt.figure(2)
-        p = plt.plot(subdf.nprocs,
-                     subdf.filtertime,
-                     lw=2,
-                     color=cmap[k],
-                     marker=markertype[k],
-                     mec=cmap[k],
-                     mfc=cmap[k],
-                     ms=10,
-                     label=r'$n={0:d}$'.format(npts))
+        if npts != 0:
+            plt.figure(2)
+            p = plt.plot(subdf.nprocs,
+                         subdf.filtertime,
+                         lw=2,
+                         color=cmap[k],
+                         marker=markertype[k],
+                         mec=cmap[k],
+                         mfc=cmap[k],
+                         ms=10,
+                         label=r'$n={0:d}$'.format(npts))
     plt.figure(0)
     ax = plt.gca()
     plt.xlabel(r"\# procs", fontsize=22, fontweight='bold')
