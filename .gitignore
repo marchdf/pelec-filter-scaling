@@ -1,6 +1,6 @@
 *.out
 .DS_Store
-PeleC3d.gnu.*.ex*
+PeleC3d.*.*.ex*
 *.o*[0-9]
 plt*/
 chk*/
