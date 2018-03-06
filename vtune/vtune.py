@@ -83,7 +83,7 @@ if __name__ == '__main__':
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('llcmiss.png', format='png')
+    plt.savefig('llcmiss.png', format='png', dpi=300)
 
     plt.figure(1)
     ax = plt.gca()
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('misses_ratio.png', format='png')
+    plt.savefig('misses_ratio.png', format='png', dpi=300)
 
     if args.show:
         plt.show()

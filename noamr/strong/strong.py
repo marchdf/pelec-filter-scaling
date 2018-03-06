@@ -154,10 +154,10 @@ if __name__ == '__main__':
     plt.ylabel(r"time $~[\%]$", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-    legend = ax.legend(loc='best')
+    legend = ax.legend(loc='best', prop={'size': 12})
     # ax.set_ylim([0, 20])
     plt.tight_layout()
-    plt.savefig('ratios.png', format='png')
+    plt.savefig('ratios.png', format='png', dpi=300)
 
     plt.figure(1)
     ax = plt.gca()
@@ -165,10 +165,10 @@ if __name__ == '__main__':
     plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-    legend = ax.legend(loc='best')
+    legend = ax.legend(loc='best', prop={'size': 12})
     # ax.set_ylim([0, 20])
     plt.tight_layout()
-    plt.savefig('total_speedup.png', format='png')
+    plt.savefig('total_speedup.png', format='png', dpi=300)
 
     plt.figure(2)
     ax = plt.gca()
@@ -176,10 +176,10 @@ if __name__ == '__main__':
     plt.ylabel(r"speedup", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-    legend = ax.legend(loc='best')
+    legend = ax.legend(loc='best', prop={'size': 12})
     # ax.set_ylim([0, 20])
     plt.tight_layout()
-    plt.savefig('filter_speedup.png', format='png')
+    plt.savefig('filter_speedup.png', format='png', dpi=300)
 
     if args.show:
         plt.show()

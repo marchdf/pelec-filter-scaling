@@ -83,10 +83,10 @@ if __name__ == '__main__':
         plt.ylabel(r"slowdown", fontsize=22, fontweight='bold')
         plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
         plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-        legend = ax.legend(loc='best')
+        legend = ax.legend(loc='best', prop={'size': 12})
         # ax.set_ylim([0, 20])
         plt.tight_layout()
-        plt.savefig('ngp.png', format='png')
+        plt.savefig('ngp.png', format='png', dpi=300)
 
     if args.show:
         plt.show()

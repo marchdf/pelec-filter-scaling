@@ -81,7 +81,7 @@ if __name__ == '__main__':
         lst.append(parse_profiler(fname))
     df = pd.DataFrame(lst, columns=['npts', 'ltype', 'runtime', 'filtertime'])
     df['ratio'] = df['filtertime'] / df['runtime'] * 100
-    df['delta'] = df['npts']-1
+    df['delta'] = df['npts'] - 1
 
     # ========================================================================
     # Plot
@@ -111,10 +111,10 @@ if __name__ == '__main__':
     plt.ylabel(r"time $~[\%]$", fontsize=22, fontweight='bold')
     plt.setp(ax.get_xmajorticklabels(), fontsize=18, fontweight='bold')
     plt.setp(ax.get_ymajorticklabels(), fontsize=18, fontweight='bold')
-    legend = ax.legend(loc='best')
+    legend = ax.legend(loc='best', prop={'size': 12})
     ax.set_ylim([0, 60])
     plt.tight_layout()
-    plt.savefig('filtertimes.png', format='png')
+    plt.savefig('filtertimes.png', format='png', dpi=300)
 
     if args.show:
         plt.show()
